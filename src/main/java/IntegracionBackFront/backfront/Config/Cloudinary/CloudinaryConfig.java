@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @Configuration
 public class CloudinaryConfig {
 
@@ -17,16 +18,19 @@ public class CloudinaryConfig {
 
     @Bean
     public Cloudinary cloudinary(){
-
+         //Crear objeto para leer las variables del env
         Dotenv dotenv = Dotenv.load();
 
-        //Almacenar configuracion
+        //Almacenar informacion necesaria
         Map<String, String> config = new HashMap<>();
 
         config.put("cloud_name", dotenv.get("CLOUDINARY_CLOUD_NAME"));
-        config.put("api_key", dotenv.get("CLOUDINARY_API_SECRET"));
+        config.put("api_key", dotenv.get("CLOUDINARY_API_KEY"));
         config.put("api_secret", dotenv.get("CLOUDINARY_API_SECRET"));
+
 
         return new Cloudinary(config);
     }
 }
+
+

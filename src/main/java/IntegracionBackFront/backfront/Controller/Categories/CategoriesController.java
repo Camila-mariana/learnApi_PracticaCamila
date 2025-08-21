@@ -28,11 +28,11 @@ public class CategoriesController {
     private CategoryService service;
 
     @GetMapping("/getDataCategories")
-    private ResponseEntity<List<CategoryDTO>> getData(){
+    private ResponseEntity<List<CategoryDTO>> getData() {
         //parte 1. Invocando al metodo getAllCategories contenido en el service y guardamos los datos en el objeto category.
         //Si no hay datos category = null de lo contrario no será nulo
         List<CategoryDTO> category = service.getAllCategories();
-        if (category == null){
+        if (category == null) {
             ResponseEntity.badRequest().body(Map.of(
                     "status", "No hay categorias registradas"
             ));
@@ -41,15 +41,15 @@ public class CategoriesController {
     }
 
     @PostMapping("/newCategory")
-    private ResponseEntity<Map<String, Object>> inserCategory(@Valid @RequestBody CategoryDTO json, HttpServletRequest request){
-        try{
+    private ResponseEntity<Map<String, Object>> inserCategory(@Valid @RequestBody CategoryDTO json, HttpServletRequest request) {
+        try {
 
             //Se captura la fecha actual en la que se hace el registro
             LocalDate fechaActual = LocalDate.now();
             json.setFechaCreacion(fechaActual);
 
-            CategoryDTO response =service.insert(json);
-            if (response == null){
+            CategoryDTO response = service.insert(json);
+            if (response == null) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "Error", "Inserción incorrecta",
                         "Estatus", "Inserción incorrecta",
@@ -60,7 +60,7 @@ public class CategoriesController {
                     "Estado", "Completado",
                     "data", response
             ));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of(
                             "status", "error",
@@ -74,24 +74,22 @@ public class CategoriesController {
     public ResponseEntity<?> modificarUsuario(
             @PathVariable Long id,
             @Valid @RequestBody CategoryDTO usuario,
-            BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             Map<String, String> errores = new HashMap<>();
             bindingResult.getFieldErrors().forEach(error ->
                     errores.put(error.getField(), error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(errores);
         }
 
-        try{
+        try {
             CategoryDTO usuarioActualizado = service.update(id, usuario);
             return ResponseEntity.ok(usuarioActualizado);
-        }
-        catch (ExceptionCategoryNotFound e){
+        } catch (ExceptionCategoryNotFound e) {
             return ResponseEntity.notFound().build();
-        }
-        catch (ExceptionColumnDuplicate e){
+        } catch (ExceptionColumnDuplicate e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                    Map.of("error", "Datos duplicados","campo", e.getColumnDuplicate())
+                    Map.of("error", "Datos duplicados", "campo", e.getColumnDuplicate())
             );
         }
     }

@@ -14,4 +14,8 @@ public class ExceptionColumnDuplicate extends RuntimeException {
         super(message);
         this.columnDuplicate = columnDuplicate;
     }
+
+    public String getColumnDuplicate() {
+        return null;
+    }
 }
